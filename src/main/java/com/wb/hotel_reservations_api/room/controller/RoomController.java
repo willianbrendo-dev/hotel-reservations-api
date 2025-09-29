@@ -1,6 +1,7 @@
 package com.wb.hotel_reservations_api.room.controller;
 
 import com.wb.hotel_reservations_api.room.model.Room;
+import com.wb.hotel_reservations_api.room.model.RoomType;
 import com.wb.hotel_reservations_api.room.service.RoomService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +50,7 @@ public class RoomController {
      * Busca quartos por tipo (ex: SUITE).
      */
     @GetMapping("/type/{roomType}")
-    public ResponseEntity<List<Room>> getRoomsByType(@PathVariable String roomType) {
+    public ResponseEntity<List<Room>> getRoomsByType(@PathVariable RoomType roomType) {
         return ResponseEntity.ok(roomService.findRoomsByType(roomType));
     }
 

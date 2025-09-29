@@ -20,8 +20,8 @@ public class Room {
 
     private String roomNumber; // Ex: "101", "205"
 
-    // Tipo do quarto: "SINGLE", "DOUBLE", "SUITE"
-    private String roomType;
+    @Enumerated(EnumType.STRING) // Salva o nome do ENUM ("SINGLE", "DOUBLE") como String no DB
+    private RoomType roomType;
 
     // Preço base da diária
     private BigDecimal pricePerNight;
@@ -31,9 +31,9 @@ public class Room {
     private boolean isAvailable; // Flag simples para disponibilidade (ajudará nas buscas iniciais)
 
     // Construtor parcial para facilitar a criação de dados de teste (opcional)
-    public Room(String roomNumber, String roomType, BigDecimal pricePerNight, int capacity) {
+    public Room(String roomNumber, RoomType roomType, BigDecimal pricePerNight, int capacity) {
         this.roomNumber = roomNumber;
-        this.roomType = roomType;
+        this.roomType = roomType; // AGORA É DO TIPO ENUM
         this.pricePerNight = pricePerNight;
         this.capacity = capacity;
         this.isAvailable = true; // Por padrão, o quarto está disponível ao ser criado

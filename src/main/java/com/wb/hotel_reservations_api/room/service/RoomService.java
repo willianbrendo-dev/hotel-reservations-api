@@ -1,6 +1,7 @@
 package com.wb.hotel_reservations_api.room.service;
 
 import com.wb.hotel_reservations_api.room.model.Room;
+import com.wb.hotel_reservations_api.room.model.RoomType;
 import com.wb.hotel_reservations_api.room.repository.RoomRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -62,7 +63,7 @@ public class RoomService {
     /**
      * Busca quartos por um tipo específico (ex: "SUITE").
      */
-    public List<Room> findRoomsByType(String roomType) {
+    public List<Room> findRoomsByType(RoomType roomType) {
         return roomRepository.findByRoomType(roomType);
     }
 }
