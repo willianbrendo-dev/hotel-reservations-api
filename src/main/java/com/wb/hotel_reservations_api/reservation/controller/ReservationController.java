@@ -83,5 +83,21 @@ public class ReservationController {
         return ResponseEntity.ok(ReservationResponseDTO.fromEntity(cancelledReservation));
     }
 
-    // Futuramente, adicionaremos um endpoint para fazer o CHECK-IN (PUT /{id}/checkin)
+    @PutMapping("/{id}/checkin")
+    public ResponseEntity<ReservationResponseDTO> checkInReservation(@PathVariable Long id) {
+        // 1. Chama o Service, que retorna a Entidade atualizada
+        Reservation reservation = reservationService.checkInReservation(id);
+
+        // 2. Converte a Entidade para DTO e retorna
+        return ResponseEntity.ok(ReservationResponseDTO.fromEntity(reservation));
+    }
+
+    @PutMapping("/{id}/checkout")
+    public ResponseEntity<ReservationResponseDTO> checkOutReservation(@PathVariable Long id) {
+        // 1. Chama o Service, que retorna a Entidade atualizada
+        Reservation reservation = reservationService.checkOutReservation(id);
+
+        // 2. Converte a Entidade para DTO e retorna
+        return ResponseEntity.ok(ReservationResponseDTO.fromEntity(reservation));
+    }
 }

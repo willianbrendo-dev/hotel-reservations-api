@@ -1,6 +1,9 @@
 package com.wb.hotel_reservations_api.reservation.service;
 
+import com.wb.hotel_reservations_api.exception.BusinessRuleException;
+import com.wb.hotel_reservations_api.exception.ResourceNotFoundException;
 import com.wb.hotel_reservations_api.reservation.dto.ReservationRequestDTO;
+import com.wb.hotel_reservations_api.reservation.dto.ReservationResponseDTO;
 import com.wb.hotel_reservations_api.reservation.model.Reservation;
 import com.wb.hotel_reservations_api.reservation.model.ReservationStatus;
 import com.wb.hotel_reservations_api.reservation.repository.ReservationRepository;
@@ -148,4 +151,42 @@ public class ReservationService {
         // Chamar o método principal de criação que contém a REGRA DE NEGÓCIO
         return this.createReservation(newReservation);
     }
+
+    public Reservation checkInReservation(Long id) {
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Reserva", id));
+
+        // Validação:
+        if (reservation.getStatus() != ReservationStatus.CONFIRMED && reservation.getStatus() != ReservationStatus.CONFIRMED) {
+            throw new BusinessRuleException(
+                    "A reserva de ID " + id + " não pode fazer check-in pois o status atual é " + reservation.getStatus() + "."
+            );
+        }
+
+        reservation.setStatus(ReservationStatus.CHECKED_IN);
+        // O Service salva a Entidade e a retorna.
+        return reservationRepository.save(reservation);
+    }
+
+    public Reservation checkOutReservation(Long id) {
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Reserva", id));
+
+        // Validação:
+        if (reservation.getStatus() != ReservationStatus.CHECKED_IN) {
+            throw new BusinessRuleException(
+                    "A reserva de ID " + id + " não pode fazer check-out pois o status atual é " + reservation.getStatus() + ". Deve estar 'CHECKED_IN'."
+            );
+        }
+
+        // **Aqui você pode adicionar a lógica para liberar o quarto ou fechar a conta**
+
+        reservation.setStatus(ReservationStatus.CHECKED_OUT);
+        // O Service salva a Entidade e a retorna.
+        return reservationRepository.save(reservation);
+    }
+
+
+
+
 }

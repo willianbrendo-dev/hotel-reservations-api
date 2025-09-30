@@ -3,10 +3,12 @@ package com.wb.hotel_reservations_api.room.controller;
 import com.wb.hotel_reservations_api.room.model.Room;
 import com.wb.hotel_reservations_api.room.model.RoomType;
 import com.wb.hotel_reservations_api.room.service.RoomService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -40,9 +42,16 @@ public class RoomController {
      * GET /api/v1/rooms/available
      * Lista todos os quartos disponíveis.
      */
-    @GetMapping("/available")
-    public ResponseEntity<List<Room>> getAvailableRooms() {
-        return ResponseEntity.ok(roomService.findAvailableRooms());
+    @GetMapping("/available") // Mantém o endpoint
+    public ResponseEntity<List<Room>> getAvailableRooms(
+            // ⭐ NOVO: Recebe as datas da URL
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate) {
+
+        // ⭐ NOVO: Chama o Service com as datas (que usa a query JPQL)
+        List<Room> availableRooms = roomService.findAvailableRoomsByDates(checkInDate, checkOutDate);
+
+        return ResponseEntity.ok(availableRooms);
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.wb.hotel_reservations_api.room.service;
 
+import com.wb.hotel_reservations_api.exception.BusinessRuleException;
 import com.wb.hotel_reservations_api.room.model.Room;
 import com.wb.hotel_reservations_api.room.model.RoomType;
 import com.wb.hotel_reservations_api.room.repository.RoomRepository;
@@ -7,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -65,5 +67,16 @@ public class RoomService {
      */
     public List<Room> findRoomsByType(RoomType roomType) {
         return roomRepository.findByRoomType(roomType);
+    }
+
+    public List<Room> findAvailableRoomsByDates(LocalDate checkInDate, LocalDate checkOutDate) {
+
+        // 1. Validação: Garante que o check-in não é após o check-out
+        if (checkInDate.isAfter(checkOutDate) || checkInDate.isEqual(checkOutDate)) {
+            throw new BusinessRuleException("A data de check-in deve ser anterior à data de check-out.");
+        }
+
+        // 2. Chama a Query JPQL com a lógica de exclusão de sobreposição
+        return roomRepository.findAvailableRooms(checkInDate, checkOutDate);
     }
 }
